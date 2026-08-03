@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="14 Basic Bible Verses - Christian Basic Practice">
+
+    <!-- iOS Specific Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="14 Basic">
+
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest_14basic.json">
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23667eea' width='100' height='100'/><text y='70' font-size='70' text-anchor='middle' x='50' fill='white'>📖</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23667eea' width='100' height='100'/><text y='70' font-size='70' text-anchor='middle' x='50' fill='white'>📖</text></svg>">
+
+    <title>14 Basic Bible Verses</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .stats-bar {
+            background: rgba(255,255,255,0.2);
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .install-banner {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            display: none;
+            cursor: pointer;
+        }
+
+        .install-banner.show {
+            display: block;
+        }
+
+        .resume-banner {
+            background: #FF9800;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            display: none;
+            cursor: pointer;
+        }
+
+        .resume-banner.show {
+            display: block;
+        }
+
+        .mode-selection {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .mode-selection h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .mode-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-width: 200px;
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .practice-area {
+            display: none;
+            padding: 30px;
+        }
+
+        .progress {
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+        }
+
+        .topic-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .bookmark-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .bookmark-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .topic-title {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .verse-reference {
+            font-size: 1.5em;
+            color: #764ba2;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .verse-content {
+            display: none;
+            font-size: 1.3em;
+            line-height: 1.8;
+            color: #333;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .verse-content.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #FF9800;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .completion-message h2 {
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .offline-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #f44336;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .offline-indicator.show {
+            display: block;
+        }
+
+        .settings-panel {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 20px 30px;
+        }
+
+        .settings-panel h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .settings-panel button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="install-banner" id="installBanner" onclick="installApp()">
+        📱 安裝此應用到主畫面 | Install this app to home screen
+    </div>
+
+    <div class="resume-banner" id="resumeBanner" onclick="resumeProgress()">
+        🔄 繼續上次練習 | Resume from last session - Click here!
+    </div>
+
+    <div class="offline-indicator" id="offlineIndicator">
+        ⚠️ 離線模式 | Offline Mode
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>📖 14 Basic</h1>
+            <p>Christian Basic Bible Verses Practice</p>
+            <div class="stats-bar">
+                <span>📊 Total: <span id="totalPracticed">0</span></span>
+                <span>🔖 Bookmarks: <span id="bookmarkCount">0</span></span>
+                <span>📅 Last: <span id="lastPractice">Never</span></span>
+            </div>
+        </div>
+
+        <div class="mode-selection" id="modeSelection">
+            <h2>選擇練習模式 (Choose Practice Mode)</h2>
+            <div class="mode-buttons">
+                <button class="mode-btn" onclick="startMode('sequential')">
+                    📋 模式一：順序練習<br>
+                    <small>Sequential Order</small>
+                </button>
+                <button class="mode-btn" onclick="startMode('random')">
+                    🔀 模式二：隨機練習<br>
+                    <small>Random Order</small>
+                </button>
+                <button class="mode-btn" onclick="startMode('review')">
+                    ✅ 模式三：全部複習<br>
+                    <small>Review All</small>
+                </button>
+                <button class="mode-btn" onclick="startMode('bookmarks')">
+                    🔖 模式四：我的書籤<br>
+                    <small>My Bookmarks</small>
+                </button>
+            </div>
+
+            <div class="settings-panel">
+                <h3>⚙️ Settings</h3>
+                <button class="btn btn-warning" onclick="clearProgress()">🔄 Reset All Progress</button>
+                <button class="btn btn-secondary" onclick="exportData()">📤 Export Data</button>
+                <button class="btn btn-secondary" onclick="showStats()">📊 View Statistics</button>
+            </div>
+        </div>
+
+        <div class="practice-area" id="practiceArea">
+            <div class="progress">
+                <div id="progressText">Progress: 0 / 56</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <div class="topic-card">
+                <button class="bookmark-btn" id="bookmarkBtn" onclick="toggleBookmark()">☆</button>
+                <div class="topic-title" id="topicTitle"></div>
+                <div class="verse-reference" id="verseReference"></div>
+                <div class="verse-content" id="verseContent"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="revealBtn" onclick="revealVerse()">顯示經文 (Reveal)</button>
+                <button class="btn btn-success hidden" id="nextBtn" onclick="nextVerse()">下一節 (Next)</button>
+                <button class="btn btn-secondary" onclick="backToMenu()">返回選單 (Back to Menu)</button>
+            </div>
+
+            <div class="completion-message hidden" id="completionMessage">
+                <h2>🎉 恭喜完成！Congratulations!</h2>
+                <p>你已完成所有經文的練習！<br>You have completed all verses!</p>
+                <button class="btn btn-primary" onclick="backToMenu()">返回選單 (Back to Menu)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PWA Install functionality
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBanner').classList.add('show');
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    }
+                    deferredPrompt = null;
+                    document.getElementById('installBanner').classList.remove('show');
+                });
+            }
+        }
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw_14basic.js')
+                .then(reg => console.log('Service Worker registered', reg))
+                .catch(err => console.log('Service Worker registration failed', err));
+        }
+
+        // Offline Detection
+        window.addEventListener('online', () => {
+            document.getElementById('offlineIndicator').classList.remove('show');
+        });
+
+        window.addEventListener('offline', () => {
+            document.getElementById('offlineIndicator').classList.add('show');
+        });
+
+        // Bible Verses Data
+        const verses = [
+            { topic: "1. 靈修 (Spiritual Devotion)", ref: "可1:35", text: "次日早晨，天未亮的時候，耶穌起來，到曠野地方去，在那裡禱告。 (可 1:35)" },
+            { topic: "1. 靈修 (Spiritual Devotion)", ref: "詩5:3", text: "耶和華阿，早晨你必聽我的聲音。早晨我必向你陳明我的心意，並要儆醒。 (詩 5:3)" },
+            { topic: "1. 靈修 (Spiritual Devotion)", ref: "但6:10", text: "但以理知道這禁令蓋了玉璽，就到自巳家裡，（他樓上的窗戶，開向耶路撒冷）一日三次，雙膝跪在他神面前，禱告感謝，與素常一樣。 (但 6:10)" },
+            { topic: "1. 靈修 (Spiritual Devotion)", ref: "賽40:30-31", text: "就是少年人也要疲乏困倦，強壯的也必全然跌倒。 但那等候耶和華的，必從新得力，他們必如鷹展翅上騰，他們奔跑卻不困倦，行走卻不疲乏。(賽 40:30-31)" },
+            { topic: "2. 禱告 (Prayer)", ref: "腓4:6-7", text: "應當一無罣慮，只要凡事藉著禱告，祈求，和感謝，將你們所要的告訴神。 神所賜出人意外的平安，必在基督耶穌裡，保守你們的心懷意念。(腓 4:6-7)" },
+            { topic: "2. 禱告 (Prayer)", ref: "雅1:6", text: "只要憑著信心求，一點不疑惑。因為那疑惑的人，就像海中的波浪，被風吹動翻騰。 (雅 1:6)" },
+            { topic: "2. 禱告 (Prayer)", ref: "雅4:3", text: "你們求也得不著，是因為你們妄求，要浪費在你們的宴樂中。 (雅 4:3)" },
+            { topic: "2. 禱告 (Prayer)", ref: "弗6:18", text: "靠著聖靈，隨時多方禱告祈求，並要在此儆醒不倦，為眾聖徒祈求， (弗 6:18)" },
+            { topic: "3. 查經 (Bible Study)", ref: "提後2:15", text: "你當竭力，在神面前得蒙喜悅，作無愧的工人，按著正意分解真理的道。 (提後 2:15)" },
+            { topic: "3. 查經 (Bible Study)", ref: "使17:11", text: "這地方的人，賢於帖撒羅尼迦的人，甘心領受這道，天天考查聖經，要曉得這道是與不是。 (徒 17:11)" },
+            { topic: "3. 查經 (Bible Study)", ref: "雅1:25", text: "惟有詳細察看那全備使人自由之律法的，並且時常如此，這人既不是聽了就忘，乃是實在行出來，就在他所行的事上必然得福。 (雅 1:25)" },
+            { topic: "3. 查經 (Bible Study)", ref: "拉7:10", text: "以斯拉定志考究遵行耶和華的律法，又將律例典章教訓以色列人。 (拉 7:10)" },
+            { topic: "4. 背經 (Scripture Memorization)", ref: "西3:16", text: "當用各樣的智慧，把基督的道理，豐豐富富的存在心裡，〔或作當把基督的道理豐豐富富的存在心裡以各樣的智慧〕用詩章，頌詞，靈歌，彼此教導，互相勸戒心被恩感歌頌神。 (西 3:16)" },
+            { topic: "4. 背經 (Scripture Memorization)", ref: "申11:18", text: "你們要將我這話存在心內，留在意中，繫在手上為記號，戴在額上為經文， (申 11:18)" },
+            { topic: "4. 背經 (Scripture Memorization)", ref: "詩119:11", text: "我將你的話藏在心裡，免得我得罪你。 (詩 119:11)" },
+            { topic: "4. 背經 (Scripture Memorization)", ref: "箴3:1", text: "我兒，不要忘記我的法則。〔或作指教〕你心要謹守我的誡命。 (箴 3:1)" },
+            { topic: "5. 交通 (Fellowship)", ref: "希10:24-25", text: "又要彼此相顧，激發愛心，勉勵行善。 你們不可停止聚會，好像那些停止慣了的人，倒要彼此勸勉。既知道〔原文作看見〕那日子臨近，就更當如此。(來 10:24-25)" },
+            { topic: "5. 交通 (Fellowship)", ref: "加6:2", text: "你們各人的重擔要互相擔當，如此，就完全了基督的律法。 (加 6:2)" },
+            { topic: "5. 交通 (Fellowship)", ref: "希3:12-13", text: "弟兄們，你們要謹慎，免得你們中間，或有人存著不信的惡心，把永生神離棄了。 總要趁著還有今日，天天彼此相勸，免得你們中間，有人被罪迷惑，心裡就剛硬了。(來 3:12-13)" },
+            { topic: "5. 交通 (Fellowship)", ref: "使2:42", text: "都恆心遵守使徒的教訓，彼此交接，擘餅，祈禱。 (徒 2:42)" },
+            { topic: "6. 見證 (Witness)", ref: "使1:8", text: "但聖靈降臨在你們身上，你們就必得著能力。並要在耶路撒冷，猶太全地，和撒瑪利亞，直到地極，作我的見證。 (徒 1:8)" },
+            { topic: "6. 見證 (Witness)", ref: "彼前3:15", text: "只要心裡尊主基督為聖。有人問你們心中盼望的緣由，就要常作準備，以溫柔敬畏的心回答各人。 (彼前 3:15)" },
+            { topic: "6. 見證 (Witness)", ref: "林前9:16-17", text: "我傳福音原沒有可誇的。因為我是不得已的。若不傳福音，我便有禍了。 我若甘心作這事，就有賞賜。若不甘心，責任卻已經託付我了。(林前 9:16-17)" },
+            { topic: "6. 見證 (Witness)", ref: "可5:19", text: "耶穌不許，卻對他說，你回家去，到你的親屬那裡，將主為你所作的，是何等大的事，是怎樣憐憫你，都告訴他們。 (可 5:19)" },
+            { topic: "7. 洗禮 (Baptism)", ref: "太28:19", text: "所以你們要去，使萬民作我的門徒，奉父子聖靈的名，給他們施洗。〔或作給他們施洗歸於父子聖靈的名〕 (太 28:19)" },
+            { topic: "7. 洗禮 (Baptism)", ref: "羅6:4", text: "所以我們藉著洗禮歸入死，和他一同埋葬。原是叫我們一舉一動有新生的樣式，像基督藉著父的榮耀，從死裡復活一樣。 (羅 6:4)" },
+            { topic: "7. 洗禮 (Baptism)", ref: "使2:38", text: "彼得說，你們各人要悔改，奉耶穌基督的名受洗，叫你們的罪得赦，就必領受所賜的聖靈。 (徒 2:38)" },
+            { topic: "7. 洗禮 (Baptism)", ref: "彼前3:21", text: "這水所表明的洗禮，現在藉著耶穌基督復活。也拯救你們。這洗禮本不在乎除掉肉體的污穢，只求在神面前有無虧的良心。 (彼前 3:21)" },
+            { topic: "8. 奉獻 (Offering)", ref: "箴3:9-10", text: "你要以財物和一切初熟的土產，尊榮耶和華。 這樣，你的倉房，必充滿有餘，你的酒醡，有新酒盈溢。(箴 3:9-10)" },
+            { topic: "8. 奉獻 (Offering)", ref: "林前9:13-14", text: "你們豈不知為聖事勞碌的，就喫殿中的物麼。伺候祭壇的，就分領壇上的物麼。 主也是這樣命定，叫傳福音的靠著福音養生。(林前 9:13-14)" },
+            { topic: "8. 奉獻 (Offering)", ref: "林後8:2", text: "就是他們在患難中受大試煉的時候，仍有滿足的快樂，在極窮之間還格外顯出他們樂捐的厚恩。(林後8:2)" },
+            { topic: "8. 奉獻 (Offering)", ref: "瑪3:10", text: "萬軍之耶和華說，你們要將當納的十分之一，全然送入倉庫，使我家有糧，以此試試我，是否為你們敞開天上的窗戶，傾福與你們，甚至無處可容。 (瑪 3:10)" },
+            { topic: "9. 得救 (Salvation)", ref: "約1:12", text: "凡接待他的，就是信他名的人，他就賜他們權柄，作神的兒女。 (約 1:12)" },
+            { topic: "9. 得救 (Salvation)", ref: "約5:24", text: "我實實在在的告訴你們，那聽我話，又信差我來者的，就有永生，不至於定罪，是已經出死入生了。 (約 5:24)" },
+            { topic: "9. 得救 (Salvation)", ref: "弗2:8-9", text: "你們得救是本乎恩，也因著信，這並不是出於自己，乃是神所賜的。 也不是出於行為，免得有人自誇。(弗 2:8-9)" },
+            { topic: "9. 得救 (Salvation)", ref: "約11:25", text: "耶穌對他說，復活在我，生命也在我。信我的人，雖然死了，也必復活。 (約 11:25)" },
+            { topic: "10. 主權 (Lordship)", ref: "路14:33", text: "這樣，你們無論甚麼人，若不撇下一切所有的，就不能作我的門徒。 (路 14:33)" },
+            { topic: "10. 主權 (Lordship)", ref: "約13:13", text: "你們稱呼我夫子，稱呼我主，你們說的不錯。我本來是。 (約 13:13)" },
+            { topic: "10. 主權 (Lordship)", ref: "西1:18", text: "他也是教會全體的之首。他是元始，是從死裡首先復生的，使他可以在凡事上居首位。 (西 1:18)" },
+            { topic: "10. 主權 (Lordship)", ref: "太6:24", text: "一個人不能事奉兩個主。不是惡這個愛那個，就是重這個輕那個。你們不能又事奉神，又事奉瑪門。〔瑪門是財利的意思〕 (太 6:24)" },
+            { topic: "11. 勝利 (Victory)", ref: "雅4:7", text: "故此你們要順服神。務要抵擋魔鬼，魔鬼就必離開你們逃跑了。 (雅 4:7)" },
+            { topic: "11. 勝利 (Victory)", ref: "林前15:57", text: "感謝神，使我們藉著我們的主耶穌基督得勝。 (林前 15:57)" },
+            { topic: "11. 勝利 (Victory)", ref: "約一2:15", text: "不要愛世界，和世界上的事。人若愛世界，愛父的心就不在他裡面了。 (約一 2:15)" },
+            { topic: "11. 勝利 (Victory)", ref: "約一4:4", text: "小子們哪，你們是屬神的，並且勝了他們。因為那在你們裡面的，比那在世界上的更大。 (約一 4:4)" },
+            { topic: "12. 赦免 (Forgiveness)", ref: "彌7:18", text: "神阿，有何神像你，赦免罪孽，饒恕你產業之餘民的罪過。不永遠懷怒，喜愛施恩。 (彌 7:18)" },
+            { topic: "12. 赦免 (Forgiveness)", ref: "賽55:7", text: "惡人當離棄自己的道路。不義的人當除掉自己的意念，歸向耶和華，耶和華就必憐恤他。當歸向我們的神，因為神必廣行赦免。 (賽 55:7)" },
+            { topic: "12. 赦免 (Forgiveness)", ref: "箴28:13", text: "遮掩自己罪過的，必不亨通。承認離棄罪過的，必蒙憐恤。 (箴 28:13)" },
+            { topic: "12. 赦免 (Forgiveness)", ref: "弗1:7", text: "我們藉這愛子的血，得蒙救贖，過犯得以赦免，乃是照他豐富的恩典。 (弗 1:7)" },
+            { topic: "13. 信心 (Faith)", ref: "弗6:16", text: "此外又拿著信德當作籐牌，可以滅盡那惡者一切的火箭。 (弗 6:16)" },
+            { topic: "13. 信心 (Faith)", ref: "羅4:20", text: "並且仰望神的應許，總沒有因不信，心裡起疑惑。反倒因信，心裡得堅固，將榮耀歸給神。 (羅 4:20)" },
+            { topic: "13. 信心 (Faith)", ref: "雅2:22", text: "可見信心是與他的行為並行，而且信心因著行為纔得成全。 (雅 2:22)" },
+            { topic: "13. 信心 (Faith)", ref: "路17:6", text: "主說，你們若有信心像一粒芥菜種，就是對這棵桑樹說，你要拔起根來，栽在海裡，他也必聽從你們。 (路 17:6)" },
+            { topic: "14. 愛心 (Love)", ref: "太22:37-39", text: "耶穌對他說，你要盡心，盡性，盡意，愛主你的神。 這是誡命中的第一，且是最大的。其次也相倣，就是要愛人如己。(太 22:37-39)" },
+            { topic: "14. 愛心 (Love)", ref: "提前1:5", text: "但命令的總歸就是愛。這愛是從清潔的心，和無虧的良心，無偽的信心，生出來的。 (提前 1:5)" },
+            { topic: "14. 愛心 (Love)", ref: "約一4:18", text: "愛裡沒有懼怕。愛既完全，就把懼怕除去。因為懼怕裡含著刑罰。懼怕的人在愛裡未得完全。 (約一 4:18)" },
+            { topic: "14. 愛心 (Love)", ref: "羅12:9-10", text: "愛人不可虛假，惡要厭惡，善要親近。 愛弟兄，要彼此親熱。恭敬人，要彼此推讓。(羅 12:9-10)" }
+        ];
+
+        // Local Storage Management
+        const STORAGE_KEY = '14basic_progress';
+
+        function saveProgress() {
+            const data = {
+                mode: currentMode,
+                index: currentIndex,
+                bookmarks: bookmarks,
+                stats: {
+                    totalPracticed: parseInt(localStorage.getItem('totalPracticed') || '0'),
+                    lastPractice: new Date().toLocaleDateString()
+                },
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            updateStats();
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    // Show resume banner if there's saved progress
+                    if (data.index > 0 && data.index < verses.length) {
+                        document.getElementById('resumeBanner').classList.add('show');
+                    }
+                    return data;
+                } catch (e) {
+                    console.error('Error loading progress:', e);
+                }
+            }
+            return null;
+        }
+
+        function resumeProgress() {
+            const saved = loadProgress();
+            if (saved) {
+                currentMode = saved.mode;
+                currentIndex = saved.index;
+                bookmarks = saved.bookmarks || [];
+
+                // Reconstruct the verse order based on saved mode
+                if (saved.mode === 'random') {
+                    // Generate same random order (using timestamp as seed)
+                    currentVerses = [...verses].sort(() => Math.random() - 0.5);
+                } else if (saved.mode === 'bookmarks') {
+                    currentVerses = verses.filter((v, i) => bookmarks.includes(i));
+                } else {
+                    currentVerses = [...verses];
+                }
+
+                document.getElementById('modeSelection').style.display = 'none';
+                document.getElementById('practiceArea').style.display = 'block';
+                document.getElementById('resumeBanner').classList.remove('show');
+
+                showVerse();
+            }
+        }
+
+        function clearProgress() {
+            if (confirm('確定要清除所有進度？This will delete all your progress!')) {
+                localStorage.clear();
+                bookmarks = [];
+                alert('所有進度已清除！All progress cleared!');
+                location.reload();
+            }
+        }
+
+        function updateStats() {
+            const total = parseInt(localStorage.getItem('totalPracticed') || '0');
+            const lastDate = localStorage.getItem('lastPractice') || 'Never';
+            document.getElementById('totalPracticed').textContent = total;
+            document.getElementById('bookmarkCount').textContent = bookmarks.length;
+            document.getElementById('lastPractice').textContent = lastDate;
+        }
+
+        function incrementTotal() {
+            const current = parseInt(localStorage.getItem('totalPracticed') || '0');
+            localStorage.setItem('totalPracticed', (current + 1).toString());
+            localStorage.setItem('lastPractice', new Date().toLocaleDateString());
+            updateStats();
+        }
+
+        function exportData() {
+            const data = {
+                progress: localStorage.getItem(STORAGE_KEY),
+                bookmarks: bookmarks,
+                totalPracticed: localStorage.getItem('totalPracticed'),
+                lastPractice: localStorage.getItem('lastPractice'),
+                exportDate: new Date().toISOString()
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '14basic_backup_' + new Date().toISOString().split('T')[0] + '.json';
+            a.click();
+            alert('Data exported! 數據已導出！');
+        }
+
+        function showStats() {
+            const total = localStorage.getItem('totalPracticed') || '0';
+            const lastDate = localStorage.getItem('lastPractice') || 'Never';
+            const bookmarkCount = bookmarks.length;
+            alert(`📊 Statistics:\n\nTotal verses practiced: ${total}\nBookmarked verses: ${bookmarkCount}\nLast practice: ${lastDate}`);
+        }
+
+        // Bookmark Management
+        let bookmarks = [];
+
+        function loadBookmarks() {
+            const saved = localStorage.getItem('14basic_bookmarks');
+            if (saved) {
+                try {
+                    bookmarks = JSON.parse(saved);
+                } catch (e) {
+                    bookmarks = [];
+                }
+            }
+        }
+
+        function saveBookmarks() {
+            localStorage.setItem('14basic_bookmarks', JSON.stringify(bookmarks));
+            updateStats();
+        }
+
+        function toggleBookmark() {
+            const globalIndex = verses.findIndex(v =>
+                v.ref === currentVerses[currentIndex].ref
+            );
+
+            const bookmarkIndex = bookmarks.indexOf(globalIndex);
+            if (bookmarkIndex > -1) {
+                bookmarks.splice(bookmarkIndex, 1);
+                document.getElementById('bookmarkBtn').textContent = '☆';
+            } else {
+                bookmarks.push(globalIndex);
+                document.getElementById('bookmarkBtn').textContent = '★';
+            }
+            saveBookmarks();
+        }
+
+        function updateBookmarkButton() {
+            const globalIndex = verses.findIndex(v =>
+                v.ref === currentVerses[currentIndex].ref
+            );
+            document.getElementById('bookmarkBtn').textContent =
+                bookmarks.includes(globalIndex) ? '★' : '☆';
+        }
+
+        // Main App Logic
+        let currentMode = '';
+        let currentVerses = [];
+        let currentIndex = 0;
+
+        function startMode(mode) {
+            if (mode === 'bookmarks' && bookmarks.length === 0) {
+                alert('還沒有書籤！No bookmarks yet! Star some verses first.');
+                return;
+            }
+
+            currentMode = mode;
+            currentIndex = 0;
+
+            if (mode === 'sequential') {
+                currentVerses = [...verses];
+            } else if (mode === 'random') {
+                currentVerses = [...verses].sort(() => Math.random() - 0.5);
+            } else if (mode === 'review') {
+                currentVerses = [...verses];
+            } else if (mode === 'bookmarks') {
+                currentVerses = verses.filter((v, i) => bookmarks.includes(i));
+            }
+
+            document.getElementById('modeSelection').style.display = 'none';
+            document.getElementById('practiceArea').style.display = 'block';
+            document.getElementById('completionMessage').classList.add('hidden');
+
+            showVerse();
+            saveProgress();
+        }
+
+        function showVerse() {
+            if (currentIndex >= currentVerses.length) {
+                showCompletion();
+                return;
+            }
+
+            const verse = currentVerses[currentIndex];
+            document.getElementById('topicTitle').textContent = verse.topic;
+            document.getElementById('verseReference').textContent = verse.ref;
+            document.getElementById('verseContent').textContent = verse.text;
+            document.getElementById('verseContent').classList.remove('show');
+
+            document.getElementById('revealBtn').classList.remove('hidden');
+            document.getElementById('nextBtn').classList.add('hidden');
+
+            updateBookmarkButton();
+            updateProgress();
+            saveProgress();
+        }
+
+        function revealVerse() {
+            document.getElementById('verseContent').classList.add('show');
+            document.getElementById('revealBtn').classList.add('hidden');
+            document.getElementById('nextBtn').classList.remove('hidden');
+            incrementTotal();
+        }
+
+        function nextVerse() {
+            currentIndex++;
+            showVerse();
+        }
+
+        function updateProgress() {
+            const total = currentVerses.length;
+            const current = currentIndex + 1;
+            document.getElementById('progressText').textContent = `Progress: ${current} / ${total}`;
+            const percentage = (current / total) * 100;
+            document.getElementById('progressFill').style.width = percentage + '%';
+        }
+
+        function showCompletion() {
+            document.querySelector('.topic-card').style.display = 'none';
+            document.querySelector('.action-buttons').style.display = 'none';
+            document.getElementById('completionMessage').classList.remove('hidden');
+
+            // Clear saved progress when completed
+            localStorage.removeItem(STORAGE_KEY);
+        }
+
+        function backToMenu() {
+            document.getElementById('modeSelection').style.display = 'block';
+            document.getElementById('practiceArea').style.display = 'none';
+            document.querySelector('.topic-card').style.display = 'block';
+            document.querySelector('.action-buttons').style.display = 'flex';
+
+            // Clear saved progress when going back to menu
+            localStorage.removeItem(STORAGE_KEY);
+            document.getElementById('resumeBanner').classList.remove('show');
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            loadBookmarks();
+            loadProgress();
+            updateStats();
+        });
+    </script>
+</body>
+</html>
