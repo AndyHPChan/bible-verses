@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="TMS 60 Verses - Christian Basic Practice v3">
+
+    <!-- iOS Specific Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TMS 60 v3">
+
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest_tms60_v3.json">
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23667eea' width='100' height='100'/><text y='70' font-size='70' text-anchor='middle' x='50' fill='white'>✝️</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23667eea' width='100' height='100'/><text y='70' font-size='70' text-anchor='middle' x='50' fill='white'>✝️</text></svg>">
+
+    <title>TMS 60 Verses v3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .stats-bar {
+            background: rgba(255,255,255,0.2);
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .install-banner {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            display: none;
+            cursor: pointer;
+        }
+
+        .install-banner.show {
+            display: block;
+        }
+
+        .resume-banner {
+            background: #FF9800;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            display: none;
+            cursor: pointer;
+        }
+
+        .resume-banner.show {
+            display: block;
+        }
+
+        .mode-selection {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .mode-selection h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .mode-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-width: 200px;
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Settings Button */
+        .settings-btn {
+            padding: 12px 30px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            background: #6c757d;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.2s;
+        }
+
+        .settings-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Settings Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 2em;
+            font-weight: bold;
+            color: #999;
+            cursor: pointer;
+            line-height: 0.8;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .practice-area {
+            display: none;
+            padding: 30px;
+        }
+
+        .progress {
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+        }
+
+        .topic-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .bookmark-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .bookmark-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .topic-title {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .verse-reference {
+            font-size: 1.5em;
+            color: #764ba2;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .verse-content {
+            display: none;
+            font-size: 1.3em;
+            line-height: 1.8;
+            color: #333;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            margin: 20px 0;
+        }
+
+        .verse-content.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Navigation Controls */
+        .navigation-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 20px;
+            font-size: 1.3em;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 60px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .toggle-btn {
+            padding: 12px 40px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            background: #28a745;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 150px;
+        }
+
+        .toggle-btn.hide-mode {
+            background: #FF9800;
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #FF9800;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .completion-message h2 {
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .offline-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #f44336;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: none;
+        }
+
+        .offline-indicator.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✝️ TMS 60 Verses v3</h1>
+            <div class="stats-bar">
+                <span>📊 練習: <span id="totalPracticed">0</span> 次</span>
+                <span>🔖 書籤: <span id="bookmarkCount">0</span></span>
+                <span>📅 <span id="lastPractice">未練習</span></span>
+            </div>
+        </div>
+
+        <div class="install-banner" id="installBanner">
+            🎯 點擊安裝到主畫面！ Click to install on home screen!
+        </div>
+
+        <div class="resume-banner" id="resumeBanner">
+            🔄 繼續上次練習 | Resume from last session
+        </div>
+
+        <div class="mode-selection" id="modeSelection">
+            <h2>選擇練習模式 | Choose Practice Mode</h2>
+            <div class="mode-buttons">
+                <button class="mode-btn" onclick="startMode(1)">模式一：順序練習<br>Sequential</button>
+                <button class="mode-btn" onclick="startMode(2)">模式二：隨機練習<br>Random</button>
+                <button class="mode-btn" onclick="startMode(3)">模式三：複習全部<br>Review All</button>
+                <button class="mode-btn" onclick="startMode(4)">模式四：我的書籤<br>My Bookmarks</button>
+            </div>
+            <button class="settings-btn" onclick="toggleSettings()">⚙️ 設定 | Settings</button>
+        </div>
+
+        <div class="practice-area" id="practiceArea">
+            <div class="progress">
+                <div>進度 Progress: <span id="progressText">0/0</span></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <div class="topic-card" id="verseCard">
+                <button class="bookmark-btn" id="bookmarkBtn" onclick="toggleBookmark()">☆</button>
+                <div class="section-title" id="sectionTitle" style="font-size: 1.2em; color: #999; margin-bottom: 10px; text-align: center;"></div>
+                <div class="topic-title" id="topicTitle"></div>
+                <div class="verse-reference" id="verseReference"></div>
+                <div class="verse-content" id="verseContent"></div>
+            </div>
+
+            <div class="navigation-controls">
+                <button class="nav-btn" id="prevBtn" onclick="previousVerse()">←</button>
+                <button class="toggle-btn" id="toggleBtn" onclick="toggleVerse()">Reveal 顯示</button>
+                <button class="nav-btn" id="nextBtn" onclick="nextVerse()">→</button>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="backToMenu()">⬅ Back to Menu 回選單</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="toggleSettings()">&times;</span>
+            <div class="modal-header">⚙️ 設定 | Settings</div>
+            <div class="action-buttons" style="flex-direction: column;">
+                <button class="btn btn-primary" onclick="viewStats()">📊 查看統計 | View Statistics</button>
+                <button class="btn btn-success" onclick="exportData()">📤 匯出資料 | Export Data</button>
+                <button class="btn btn-danger" onclick="resetProgress()">🔄 重置全部 | Reset All Progress</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="offline-indicator" id="offlineIndicator">
+        📵 Offline Mode
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'tms60_progress_v3';
+        const BOOKMARK_KEY = 'tms60_bookmarks_v3';
+
+        const verses = [
+            // A. 過新生活 (Living the New Life)
+            { section: "A. 過新生活 (Living the New Life)", topic: "基督是中心", ref: "林後 5:17", text: "若有人在基督裡，他就是新造的人。舊事已過，都變成新的了。 (林後 5:17)" },
+            { section: "A. 過新生活 (Living the New Life)", topic: "基督是中心", ref: "加 2:20", text: "我已經與基督同釘十架。現在活著的，不再是我，乃是基督在我裡面活著。並且我如今在肉身活著，是因信神的兒子而活，他是愛我，為我捨己。 (加 2:20)" },
+            { section: "A. 過新生活 (Living the New Life)", topic: "順從基督", ref: "羅 12:1", text: "所以弟兄們，我以神的慈悲勸你們，將身體獻上，當作活祭，是聖潔的，是神所喜悅的。你們如此事奉，乃是理所當然的。 (羅 12:1)" },
+            { section: "A. 過新生活 (Living the New Life)", topic: "順服基督", ref: "約 14:21", text: "有了我的命令又遵守的，這人就是愛我的。愛我的必蒙我父愛他，我也要愛他，並且要向他顯現。 (約 14:21)" },
+            { section: "A. 過新生活 (Living the New Life)", topic: "神的話", ref: "提後 3:16", text: "聖經都是神所默示的，〔或作凡神所默示的聖經〕於教訓，督責，使人歸正，教導人學義，都是有益的。 (提後 3:16)" },
+            { section: "A. 過新生活 (Living the New Life)", topic: "神的話", ref: "書 1:8", text: "這律法書不可離開你的口。總要晝夜思想，好使你謹守遵行這書上所寫的一切話。如此你的道路就可以亨通，凡事順利。 (書 1:8)" },
+            { section: "A. 過新生活 (Living the New Life)", topic: "禱告", ref: "約 15:7", text: "你們若常在我裡面，我的話也常在你們裡面，凡你們所願意的，祈求就給你們成就。 (約 15:7)" },
+            { section: "A. 過新生活 (Living the New Life)", topic: "禱告", ref: "腓 4:6-7", text: "應當一無罣慮，只要凡事藉著禱告，祈求，和感謝，將你們所要的告訴神。 神所賜出人意外的平安，必在基督耶穌裡，保守你們的心懷意念。(腓 4:6-7)" },
+            { section: "A. 過新生活 (Living the New Life)", topic: "交通", ref: "太 18:20", text: "因為無論在那裡，有兩三個人奉我的名聚會，那裡就有我在他們中間。 (太 18:20)" },
+            { section: "A. 過新生活 (Living the New Life)", topic: "交通", ref: "來 10:24-25", text: "又要彼此相顧，激發愛心，勉勵行善。 你們不可停止聚會，好像那些停止慣了的人，倒要彼此勸勉。既知道〔原文作看見〕那日子臨近，就更當如此。(來 10:24-25)" },
+            { section: "A. 過新生活 (Living the New Life)", topic: "見証", ref: "太 4:19", text: "耶穌對他們說，來跟從我，我要叫你們得人如得魚一樣。 (太 4:19)" },
+            { section: "A. 過新生活 (Living the New Life)", topic: "見証", ref: "羅 1:16", text: "我不以福音為恥。這福音本是神的大能，要救一切相信的，先是猶太人，後是希利尼人。 (羅 1:16)" },
+
+            // B. 傳揚基督 (Proclaiming Christ)
+            { section: "B. 傳揚基督 (Proclaiming Christ)", topic: "人人有罪", ref: "羅 3:23", text: "因為世人都犯了罪，虧缺了神的榮耀。 (羅 3:23)" },
+            { section: "B. 傳揚基督 (Proclaiming Christ)", topic: "人人有罪", ref: "賽 53:6", text: "我們都如羊走迷，各人偏行己路。耶和華使我們眾人的罪孽都歸在他身上。 (賽 53:6)" },
+            { section: "B. 傳揚基督 (Proclaiming Christ)", topic: "罪的刑罰", ref: "羅 6:23", text: "因為罪的工價乃是死。惟有神的恩賜，在我們的主基督耶穌裡，乃是永生。 (羅 6:23)" },
+            { section: "B. 傳揚基督 (Proclaiming Christ)", topic: "罪的刑罰", ref: "來 9:27", text: "按著定命，人人都有一死，死後且有審判。 (來 9:27)" },
+            { section: "B. 傳揚基督 (Proclaiming Christ)", topic: "基督代付贖價", ref: "羅 5:8", text: "惟有基督在我們還作罪人的時候為我們死，神的愛就在此向我們顯明了。 (羅 5:8)" },
+            { section: "B. 傳揚基督 (Proclaiming Christ)", topic: "基督代付贖價", ref: "彼前 3:18", text: "因基督也曾一次為罪受苦，〔受苦有古卷作受死〕就是義的代替不義的，為要引我們到神面前。按著肉體說他被治死。按著靈性說他復活了。 (彼前 3:18)" },
+            { section: "B. 傳揚基督 (Proclaiming Christ)", topic: "救恩不在行為", ref: "弗 2:8-9", text: "你們得救是本乎恩，也因著信，這並不是出於自己，乃是神所賜的。 也不是出於行為，免得有人自誇。(弗 2:8-9)" },
+            { section: "B. 傳揚基督 (Proclaiming Christ)", topic: "救恩不在行為", ref: "多 3:5", text: "他便救了我們，並不是因我們自己所行的義，乃是照他的憐憫，藉著重生的洗，和聖靈的更新。 (多 3:5)" },
+            { section: "B. 傳揚基督 (Proclaiming Christ)", topic: "必須要接受基督", ref: "約 1:12", text: "凡接待他的，就是信他名的人，他就賜他們權柄，作神的兒女。 (約 1:12)" },
+            { section: "B. 傳揚基督 (Proclaiming Christ)", topic: "必須要接受基督", ref: "啟 3:20", text: "看哪，我站在門外叩門。若有聽見我聲音就開門的，我要進到他那裡去，我與他，他與我一同坐席。 (啟 3:20)" },
+            { section: "B. 傳揚基督 (Proclaiming Christ)", topic: "得救的確據", ref: "約一 5:13", text: "我將這些話寫給你們信奉神兒子之名的人，要叫你們知道自己有永生。 (約一 5:13)" },
+            { section: "B. 傳揚基督 (Proclaiming Christ)", topic: "得救的確據", ref: "約 5:24", text: "我實實在在的告訴你們，那聽我話，又信差我來者的，就有永生，不至於定罪，是已經出死入生了。 (約 5:24)" },
+
+            // C. 倚靠神的資源 (Relying on God's Resources)
+            { section: "C. 倚靠神的資源 (Relying on God's Resources)", topic: "祂的靈", ref: "林前 3:16", text: "豈不知你們是神的殿，神的靈住在你們裡頭麼。 (林前 3:16)" },
+            { section: "C. 倚靠神的資源 (Relying on God's Resources)", topic: "祂的靈", ref: "林前 2:12", text: "我們所領受的，並不是世上的靈，乃是從神來的靈，叫我們能知道神開恩賜給我們的事。(林前 2:12)" },
+            { section: "C. 倚靠神的資源 (Relying on God's Resources)", topic: "祂的力量", ref: "賽 41:10", text: "你不要害怕，因為我與你同在。不要驚惶，因為我是你的神。我必堅固你，我必幫助你，我必用我公義的右手扶持你。 (賽 41:10)" },
+            { section: "C. 倚靠神的資源 (Relying on God's Resources)", topic: "祂的力量", ref: "腓 4:13", text: "我靠著那加給我力量的，凡事都能作。 (腓 4:13)" },
+            { section: "C. 倚靠神的資源 (Relying on God's Resources)", topic: "祂的信實", ref: "哀 3:22-23", text: "我們不至消滅，是出於耶和華諸般的慈愛，是因他的憐憫，不至斷絕。 每早晨這都是新的。你的誠實，極其廣大。(哀 3:22-23)" },
+            { section: "C. 倚靠神的資源 (Relying on God's Resources)", topic: "祂的信實", ref: "民 23:19", text: "神非人，必不致說謊，也非人子，必不致後悔。他說話豈不照著行呢，他發言豈不要成就呢。(民 23:19)" },
+            { section: "C. 倚靠神的資源 (Relying on God's Resources)", topic: "祂的平安", ref: "賽 26:3", text: "堅心倚賴你的，你必保守他十分平安，因為他倚靠你。 (賽 26:3)" },
+            { section: "C. 倚靠神的資源 (Relying on God's Resources)", topic: "祂的平安", ref: "彼前5:7", text: "你們要將一切的憂慮卸給 神，因為他顧念你們。(彼得5:7)" },
+            { section: "C. 倚靠神的資源 (Relying on God's Resources)", topic: "祂的賜給", ref: "羅 8:32", text: "神既不愛惜自己的兒子為我們眾人捨了，豈不也把萬物和他一同白白的賜給我們麼。 (羅 8:32)" },
+            { section: "C. 倚靠神的資源 (Relying on God's Resources)", topic: "祂的賜給", ref: "腓 4:19", text: "我的神必照他榮耀的豐富，在基督耶穌裡，使你們一切所需用的都充足。 (腓 4:19)" },
+            { section: "C. 倚靠神的資源 (Relying on God's Resources)", topic: "祂在試探中的幫助", ref: "來 2:18", text: "他自己既然被試探而受苦，就能搭救被試探的人。 (來 2:18)" },
+            { section: "C. 倚靠神的資源 (Relying on God's Resources)", topic: "祂在試探中的幫助", ref: "詩 119:9, 11", text: "少年人用甚麼潔淨他的行為呢。是要遵行你的話。我將你的話藏在心裡，免得我得罪你。(詩 119:9, 11)" },
+
+            // D. 以基督為首 (Being Christ-Centered)
+            { section: "D. 以基督為首 (Being Christ-Centered)", topic: "作基督的門徒", ref: "太 6:33", text: "你們要先求他的國，和他的義這些東西都要加給你們了。 (太 6:33)" },
+            { section: "D. 以基督為首 (Being Christ-Centered)", topic: "作基督的門徒", ref: "路 9:23", text: "耶穌又對眾人說，若有人要跟從我，就當捨己，天天背起他的十字架來，跟從我。 (路 9:23)" },
+            { section: "D. 以基督為首 (Being Christ-Centered)", topic: "從世界分別出來", ref: "約一 2:15-16", text: "不要愛世界，和世界上的事。人若愛世界，愛父的心就不在他裡面了。 因為凡世界上的事，就像肉體的情慾，眼目的情慾，並今生的驕傲，都不是從父來的，乃是從世界來的。(約一 2:15-16)" },
+            { section: "D. 以基督為首 (Being Christ-Centered)", topic: "從世界分別出來", ref: "羅 12:2", text: "不要效法這個世界。只要心意更新而變化，叫你們察驗何為神的善良，純全可喜悅的旨意。(羅 12:2)" },
+            { section: "D. 以基督為首 (Being Christ-Centered)", topic: "堅定不移", ref: "林前 15:58", text: "所以我親愛的弟兄們，你們務要堅固不可搖動，常常竭力多作主工，因為知道你們的勞苦，在主裡面不是徒然的。 (林前 15:58)" },
+            { section: "D. 以基督為首 (Being Christ-Centered)", topic: "堅定不移", ref: "來 12:3", text: "那忍受罪人這樣頂撞的，你們要思想，免得疲倦灰心。 (來 12:3)" },
+            { section: "D. 以基督為首 (Being Christ-Centered)", topic: "要服待他人", ref: "可 10:45", text: "因為人子來，並不是要受人的服事，乃是要服事人，並且要捨命，作多人的贖價。 (可 10:45)" },
+            { section: "D. 以基督為首 (Being Christ-Centered)", topic: "要服待他人", ref: "林後 4:5", text: "我們原不是傳自己，乃是傳基督耶穌為主，並且自己因耶穌作你們的僕人。 (林後 4:5)" },
+            { section: "D. 以基督為首 (Being Christ-Centered)", topic: "慷慨的捐助", ref: "箴 3:9-10", text: "你要以財物和一切初熟的土產，尊榮耶和華。 這樣，你的倉房，必充滿有餘，你的酒醡，有新酒盈溢。(箴 3:9-10)" },
+            { section: "D. 以基督為首 (Being Christ-Centered)", topic: "慷慨的捐助", ref: "林後 9:6-7", text: "少種的少收，多種的多收。這話是真的。 各人要隨本心所酌定的。不要作難，不要勉強。因為捐得樂意的人，是神所喜愛的。(林後 9:6-7)" },
+            { section: "D. 以基督為首 (Being Christ-Centered)", topic: "褔音要傳遍世界", ref: "徒 1:8", text: "但聖靈降臨在你們身上，你們就必得著能力。並要在耶路撒冷，猶太全地，和撒瑪利亞，直到地極，作我的見證。 (徒 1:8)" },
+            { section: "D. 以基督為首 (Being Christ-Centered)", topic: "褔音要傳遍世界", ref: "太 28:19-20", text: "所以你們要去，使萬民作我的門徒，奉父子聖靈的名，給他們施洗。〔或作給他們施洗歸於父子聖靈的名〕 凡我所吩咐你們的，都教訓他們遵守我就常與你們同在，直到世界的末了。(太 28:19-20)" },
+
+            // E. 長成基督的讓式 (Growing in Christlikeness)
+            { section: "E. 長成基督的讓式 (Growing in Christlikeness)", topic: "愛心", ref: "約 13:34-35", text: "我賜給你們一條新命令，乃是叫你們彼此相愛。我怎樣愛你們，你們也要怎相愛。 你們若有彼此相愛的心，眾人因此就認出你們是我的門徒了。(約 13:34-35)" },
+            { section: "E. 長成基督的讓式 (Growing in Christlikeness)", topic: "愛心", ref: "約一 3:18", text: "小子們哪，我們相愛，不要只在言語和舌頭上，總要在行為和誠實上。 (約一 3:18)" },
+            { section: "E. 長成基督的讓式 (Growing in Christlikeness)", topic: "謙卑", ref: "腓 2:3-4", text: "凡事不可結黨，不可貪圖虛浮的榮耀。只要存心謙卑，各人看別人比自己強。 各人不要單顧自己的事，也要顧別人的事。(腓 2:3-4)" },
+            { section: "E. 長成基督的讓式 (Growing in Christlikeness)", topic: "謙卑", ref: "彼前 5:5-6", text: "你們年幼的，也要順服年長的。就是你們眾人，也都要以謙卑束腰，彼此順服。因為神阻擋驕傲的人，賜恩給謙卑的人。 所以你們要自卑，服在神大能的手下，到了時候他必叫你們升高。(彼前 5:5-6)" },
+            { section: "E. 長成基督的讓式 (Growing in Christlikeness)", topic: "聖潔", ref: "弗 5:3", text: "至於淫亂，並一切污穢，或是貪婪，在你們中間連題都不可，方合聖徒的體統。 (弗 5:3)" },
+            { section: "E. 長成基督的讓式 (Growing in Christlikeness)", topic: "聖潔", ref: "彼前 2:11", text: "親愛的弟兄阿，你們是客旅，是寄居的。我勸你們要禁戒肉體的私慾。這私慾是與靈魂爭戰的。 (彼前 2:11)" },
+            { section: "E. 長成基督的讓式 (Growing in Christlikeness)", topic: "誠實", ref: "利 19:11", text: "你們不可偷盜，不可欺騙，也不可彼此說謊。 (利 19:11)" },
+            { section: "E. 長成基督的讓式 (Growing in Christlikeness)", topic: "誠實", ref: "徒 24:16", text: "我因此自己勉勵，對神，對人，常存無虧的良心。 (徒 24:16)" },
+            { section: "E. 長成基督的讓式 (Growing in Christlikeness)", topic: "信心", ref: "來 11:6", text: "人非有信，就不能得神的喜悅。因為到神面前來的人，必須信有神， 且信衪賞賜那尋求衪的人。(來 11:6)" },
+            { section: "E. 長成基督的讓式 (Growing in Christlikeness)", topic: "信心", ref: "羅 4:20-21", text: "並且仰望神的應許，總沒有因不信，心裡起疑惑。反倒因信，心裡得堅固，將榮耀歸給神。且滿心相信，神所應許的必能作成。(羅 4:20-21)" },
+            { section: "E. 長成基督的讓式 (Growing in Christlikeness)", topic: "善行", ref: "加 6:9-10", text: "我們行善，不可喪志。若不灰心，到了時候，就要收成。 所以有了機會，就當向眾人行善。向信徒一家的人更當這樣。(加 6:9-10)" },
+            { section: "E. 長成基督的讓式 (Growing in Christlikeness)", topic: "善行", ref: "太 5:16", text: "你們的光也當這樣照在人前，叫他們看見你們的好行為，便將榮耀歸給你們在天上的父。(太 5:16)" }
+        
+        ];
+
+        let currentMode = 0;
+        let currentIndex = 0;
+        let practiceVerses = [];
+        let bookmarks = [];
+        let isRevealed = false;
+
+        // Load saved data
+        function loadSavedData() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            const savedBookmarks = localStorage.getItem(BOOKMARK_KEY);
+
+            if (savedBookmarks) {
+                bookmarks = JSON.parse(savedBookmarks);
+            }
+
+            updateStats();
+
+            if (saved) {
+                const data = JSON.parse(saved);
+                if (data.index > 0 && data.index < verses.length) {
+                    document.getElementById('resumeBanner').classList.add('show');
+                    document.getElementById('resumeBanner').onclick = () => resumeSession(data);
+                }
+            }
+        }
+
+        function resumeSession(data) {
+            startMode(data.mode);
+            currentIndex = data.index;
+            showVerse();
+        }
+
+        function updateStats() {
+            document.getElementById('totalPracticed').textContent = localStorage.getItem('totalPracticed_tms60') || '0';
+            document.getElementById('bookmarkCount').textContent = bookmarks.length;
+            document.getElementById('lastPractice').textContent = localStorage.getItem('lastPractice_tms60') || '未練習';
+        }
+
+        function saveProgress() {
+            const data = {
+                mode: currentMode,
+                index: currentIndex,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            localStorage.setItem(BOOKMARK_KEY, JSON.stringify(bookmarks));
+
+            const practiced = parseInt(localStorage.getItem('totalPracticed_tms60') || '0');
+            localStorage.setItem('totalPracticed_tms60', practiced.toString());
+            localStorage.setItem('lastPractice_tms60', new Date().toLocaleDateString());
+
+            updateStats();
+        }
+
+        function startMode(mode) {
+            currentMode = mode;
+            currentIndex = 0;
+            isRevealed = false;
+
+            document.getElementById('modeSelection').classList.add('hidden');
+            document.getElementById('practiceArea').classList.remove('hidden');
+
+            if (mode === 1) {
+                practiceVerses = verses.slice();
+            } else if (mode === 2) {
+                practiceVerses = verses.slice().sort(() => Math.random() - 0.5);
+            } else if (mode === 3) {
+                practiceVerses = verses.slice();
+            } else if (mode === 4) {
+                practiceVerses = verses.filter((_, idx) => bookmarks.includes(idx));
+                if (practiceVerses.length === 0) {
+                    alert('沒有書籤！請先在其他模式中標記一些經文。\n\nNo bookmarks! Please bookmark some verses in other modes first.');
+                    backToMenu();
+                    return;
+                }
+            }
+
+            showVerse();
+        }
+
+        function showVerse() {
+            if (currentIndex >= practiceVerses.length) {
+                showCompletion();
+                return;
+            }
+
+            const verse = practiceVerses[currentIndex];
+            const verseIdx = verses.indexOf(verse);
+
+            document.getElementById('sectionTitle').textContent = verse.section || '';
+            document.getElementById('topicTitle').textContent = verse.topic;
+            document.getElementById('verseReference').textContent = verse.ref;
+            document.getElementById('verseContent').textContent = verse.text;
+            document.getElementById('verseContent').classList.remove('show');
+
+            document.getElementById('bookmarkBtn').textContent = bookmarks.includes(verseIdx) ? '★' : '☆';
+
+            document.getElementById('progressText').textContent = `${currentIndex + 1}/${practiceVerses.length}`;
+            const percent = ((currentIndex + 1) / practiceVerses.length) * 100;
+            document.getElementById('progressFill').style.width = percent + '%';
+
+            // Reset toggle button
+            isRevealed = false;
+            document.getElementById('toggleBtn').textContent = 'Reveal 顯示';
+            document.getElementById('toggleBtn').classList.remove('hide-mode');
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
+            document.getElementById('nextBtn').disabled = currentIndex >= practiceVerses.length - 1;
+
+            saveProgress();
+        }
+
+        function toggleVerse() {
+            const verseContent = document.getElementById('verseContent');
+            const toggleBtn = document.getElementById('toggleBtn');
+
+            if (isRevealed) {
+                // Hide the verse
+                verseContent.classList.remove('show');
+                toggleBtn.textContent = 'Reveal 顯示';
+                toggleBtn.classList.remove('hide-mode');
+                isRevealed = false;
+            } else {
+                // Show the verse
+                verseContent.classList.add('show');
+                toggleBtn.textContent = 'Hide 隱藏';
+                toggleBtn.classList.add('hide-mode');
+                isRevealed = true;
+
+                // Increment practice counter
+                const practiced = parseInt(localStorage.getItem('totalPracticed_tms60') || '0') + 1;
+                localStorage.setItem('totalPracticed_tms60', practiced.toString());
+                localStorage.setItem('lastPractice_tms60', new Date().toLocaleDateString());
+                updateStats();
+            }
+        }
+
+        function previousVerse() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                showVerse();
+            }
+        }
+
+        function nextVerse() {
+            if (currentIndex < practiceVerses.length - 1) {
+                currentIndex++;
+                showVerse();
+            }
+        }
+
+        function toggleBookmark() {
+            const verse = practiceVerses[currentIndex];
+            const verseIdx = verses.indexOf(verse);
+
+            if (bookmarks.includes(verseIdx)) {
+                bookmarks = bookmarks.filter(b => b !== verseIdx);
+                document.getElementById('bookmarkBtn').textContent = '☆';
+            } else {
+                bookmarks.push(verseIdx);
+                document.getElementById('bookmarkBtn').textContent = '★';
+            }
+
+            localStorage.setItem(BOOKMARK_KEY, JSON.stringify(bookmarks));
+            updateStats();
+        }
+
+        function showCompletion() {
+            document.getElementById('practiceArea').innerHTML = `
+                <div class="completion-message">
+                    <h2>🎉 完成！ Completed!</h2>
+                    <p>你已經完成所有經文的練習！</p>
+                    <p>You have completed all verses!</p>
+                    <div class="action-buttons">
+                        <button class="btn btn-success" onclick="startMode(currentMode)">🔄 重新開始 | Restart</button>
+                        <button class="btn btn-secondary" onclick="backToMenu()">⬅ 回選單 | Back to Menu</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function backToMenu() {
+            document.getElementById('modeSelection').classList.remove('hidden');
+            document.getElementById('practiceArea').classList.add('hidden');
+            document.getElementById('practiceArea').innerHTML = `
+                <div class="progress">
+                    <div>進度 Progress: <span id="progressText">0/0</span></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+                <div class="topic-card" id="verseCard">
+                    <button class="bookmark-btn" id="bookmarkBtn" onclick="toggleBookmark()">☆</button>
+                    <div class="section-title" id="sectionTitle" style="font-size: 1.2em; color: #999; margin-bottom: 10px; text-align: center;"></div>
+                    <div class="topic-title" id="topicTitle"></div>
+                    <div class="verse-reference" id="verseReference"></div>
+                    <div class="verse-content" id="verseContent"></div>
+                </div>
+
+                <div class="navigation-controls">
+                    <button class="nav-btn" id="prevBtn" onclick="previousVerse()">←</button>
+                    <button class="toggle-btn" id="toggleBtn" onclick="toggleVerse()">Reveal 顯示</button>
+                    <button class="nav-btn" id="nextBtn" onclick="nextVerse()">→</button>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="backToMenu()">⬅ Back to Menu 回選單</button>
+                </div>
+            `;
+
+            localStorage.removeItem(STORAGE_KEY);
+            document.getElementById('resumeBanner').classList.remove('show');
+        }
+
+        function toggleSettings() {
+            const modal = document.getElementById('settingsModal');
+            if (modal.classList.contains('show')) {
+                modal.classList.remove('show');
+            } else {
+                modal.classList.add('show');
+            }
+        }
+
+        function viewStats() {
+            const practiced = localStorage.getItem('totalPracticed_tms60') || '0';
+            const lastDate = localStorage.getItem('lastPractice_tms60') || '未練習';
+            const bookmarkCount = bookmarks.length;
+
+            alert(`📊 統計資料 | Statistics\n\n` +
+                  `✅ 總練習次數 | Total Practiced: ${practiced} 次\n` +
+                  `🔖 書籤數量 | Bookmarks: ${bookmarkCount}\n` +
+                  `📅 最後練習 | Last Practice: ${lastDate}`);
+        }
+
+        function exportData() {
+            const data = {
+                totalPracticed: localStorage.getItem('totalPracticed_tms60') || '0',
+                lastPractice: localStorage.getItem('lastPractice_tms60') || 'Never',
+                bookmarks: bookmarks,
+                exportDate: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `tms60_backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+
+            alert('資料已匯出！Data exported!');
+        }
+
+        function resetProgress() {
+            if (confirm('確定要重置所有進度和書籤嗎？此操作無法復原。\n\nAre you sure you want to reset all progress and bookmarks? This cannot be undone.')) {
+                localStorage.removeItem(STORAGE_KEY);
+                localStorage.removeItem(BOOKMARK_KEY);
+                localStorage.removeItem('totalPracticed_tms60');
+                localStorage.removeItem('lastPractice_tms60');
+                bookmarks = [];
+                updateStats();
+                alert('已重置所有資料！All data has been reset!');
+                toggleSettings();
+            }
+        }
+
+        // PWA Install
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBanner').classList.add('show');
+        });
+
+        document.getElementById('installBanner').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                document.getElementById('installBanner').classList.remove('show');
+            }
+        });
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw_tms60_v3.js')
+                .then(reg => console.log('Service Worker registered', reg))
+                .catch(err => console.log('Service Worker registration failed', err));
+        }
+
+        // Offline Detection
+        window.addEventListener('online', () => {
+            document.getElementById('offlineIndicator').classList.remove('show');
+        });
+
+        window.addEventListener('offline', () => {
+            document.getElementById('offlineIndicator').classList.add('show');
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('settingsModal');
+            if (e.target === modal) {
+                toggleSettings();
+            }
+        });
+
+        // Initialize
+        loadSavedData();
+    </script>
+</body>
+</html>
