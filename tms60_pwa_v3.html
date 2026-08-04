@@ -6,12 +6,12 @@
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#667eea">
-    <meta name="description" content="TMS 60 Verses - Christian Basic Practice v3">
+    <meta name="description" content="TMS 60 Verses - Christian Basic Practice">
 
     <!-- iOS Specific Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="TMS 60 v3">
+    <meta name="apple-mobile-web-app-title" content="TMS 60">
 
     <!-- Manifest -->
     <link rel="manifest" href="manifest_tms60_v3.json">
@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23667eea' width='100' height='100'/><text y='70' font-size='70' text-anchor='middle' x='50' fill='white'>✝️</text></svg>">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23667eea' width='100' height='100'/><text y='70' font-size='70' text-anchor='middle' x='50' fill='white'>✝️</text></svg>">
 
-    <title>TMS 60 Verses v3</title>
+    <title>TMS 60 Verses</title>
     <style>
         * {
             margin: 0;
@@ -127,86 +127,6 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
-        /* Settings Button */
-        .settings-btn {
-            padding: 12px 30px;
-            font-size: 1em;
-            border: none;
-            border-radius: 8px;
-            background: #6c757d;
-            color: white;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.2s;
-        }
-
-        .settings-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Settings Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            animation: fadeIn 0.3s;
-        }
-
-        .modal.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            animation: slideIn 0.3s;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal-header {
-            font-size: 1.8em;
-            color: #667eea;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .modal-close {
-            float: right;
-            font-size: 2em;
-            font-weight: bold;
-            color: #999;
-            cursor: pointer;
-            line-height: 0.8;
-        }
-
-        .modal-close:hover {
-            color: #333;
-        }
-
         .practice-area {
             display: none;
             padding: 30px;
@@ -258,6 +178,13 @@
             transform: scale(1.2);
         }
 
+        .section-title {
+            font-size: 1.8em;
+            color: #764ba2;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
         .topic-title {
             font-size: 2em;
             color: #667eea;
@@ -295,7 +222,172 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Navigation Controls */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #FF9800;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .completion-message h2 {
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .offline-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #f44336;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .offline-indicator.show {
+            display: block;
+        }
+
+        .settings-panel {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 20px 30px;
+        }
+
+        .settings-panel h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .settings-panel button {
+            margin: 5px;
+        }
+
+        /* v3: Settings Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 2em;
+            font-weight: bold;
+            color: #999;
+            cursor: pointer;
+            line-height: 0.8;
+        }
+
+        .modal-close:hover { color: #333; }
+
+        .settings-btn {
+            padding: 12px 30px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            background: #6c757d;
+            color: white;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.2s;
+        }
+
+        .settings-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* v3: Navigation Controls */
         .navigation-controls {
             display: flex;
             align-items: center;
@@ -348,149 +440,19 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 12px 30px;
-            font-size: 1.1em;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: #667eea;
-            color: white;
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-warning {
-            background: #FF9800;
-            color: white;
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .completion-message {
-            text-align: center;
-            padding: 40px;
-            background: #f8f9fa;
-            border-radius: 15px;
-        }
-
-        .completion-message h2 {
-            color: #28a745;
-            margin-bottom: 20px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .offline-indicator {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #f44336;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            display: none;
-        }
-
-        .offline-indicator.show {
-            display: block;
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>✝️ TMS 60 Verses v3</h1>
-            <div class="stats-bar">
-                <span>📊 練習: <span id="totalPracticed">0</span> 次</span>
-                <span>🔖 書籤: <span id="bookmarkCount">0</span></span>
-                <span>📅 <span id="lastPractice">未練習</span></span>
-            </div>
-        </div>
-
-        <div class="install-banner" id="installBanner">
-            🎯 點擊安裝到主畫面！ Click to install on home screen!
-        </div>
-
-        <div class="resume-banner" id="resumeBanner">
-            🔄 繼續上次練習 | Resume from last session
-        </div>
-
-        <div class="mode-selection" id="modeSelection">
-            <h2>選擇練習模式 | Choose Practice Mode</h2>
-            <div class="mode-buttons">
-                <button class="mode-btn" onclick="startMode(1)">模式一：順序練習<br>Sequential</button>
-                <button class="mode-btn" onclick="startMode(2)">模式二：隨機練習<br>Random</button>
-                <button class="mode-btn" onclick="startMode(3)">模式三：複習全部<br>Review All</button>
-                <button class="mode-btn" onclick="startMode(4)">模式四：我的書籤<br>My Bookmarks</button>
-            </div>
-            <button class="settings-btn" onclick="toggleSettings()">⚙️ 設定 | Settings</button>
-        </div>
-
-        <div class="practice-area" id="practiceArea">
-            <div class="progress">
-                <div>進度 Progress: <span id="progressText">0/0</span></div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-            </div>
-
-            <div class="topic-card" id="verseCard">
-                <button class="bookmark-btn" id="bookmarkBtn" onclick="toggleBookmark()">☆</button>
-                <div class="section-title" id="sectionTitle" style="font-size: 1.2em; color: #999; margin-bottom: 10px; text-align: center;"></div>
-                <div class="topic-title" id="topicTitle"></div>
-                <div class="verse-reference" id="verseReference"></div>
-                <div class="verse-content" id="verseContent"></div>
-            </div>
-
-            <div class="navigation-controls">
-                <button class="nav-btn" id="prevBtn" onclick="previousVerse()">←</button>
-                <button class="toggle-btn" id="toggleBtn" onclick="toggleVerse()">Reveal 顯示</button>
-                <button class="nav-btn" id="nextBtn" onclick="nextVerse()">→</button>
-            </div>
-
-            <div class="action-buttons">
-                <button class="btn btn-secondary" onclick="backToMenu()">⬅ Back to Menu 回選單</button>
-            </div>
-        </div>
+    <div class="install-banner" id="installBanner" onclick="installApp()">
+        📱 安裝此應用到主畫面 | Install this app to home screen
     </div>
 
-    <!-- Settings Modal -->
+    <div class="resume-banner" id="resumeBanner" onclick="resumeProgress()">
+        🔄 繼續上次練習 | Resume from last session - Click here!
+    </div>
+
+    
+    <!-- v3: Settings Modal -->
     <div class="modal" id="settingsModal">
         <div class="modal-content">
             <span class="modal-close" onclick="toggleSettings()">&times;</span>
@@ -504,13 +466,106 @@
     </div>
 
     <div class="offline-indicator" id="offlineIndicator">
-        📵 Offline Mode
+        ⚠️ 離線模式 | Offline Mode
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>✝️ TMS 60</h1>
+            <p>Topical Memory System - 60 Verses</p>
+            <div class="stats-bar">
+                <span>📊 Total: <span id="totalPracticed">0</span></span>
+                <span>🔖 Bookmarks: <span id="bookmarkCount">0</span></span>
+                <span>📅 Last: <span id="lastPractice">Never</span></span>
+            </div>
+        </div>
+
+        <div class="mode-selection" id="modeSelection">
+            <h2>選擇練習模式 (Choose Practice Mode)</h2>
+            <div class="mode-buttons">
+                <button class="mode-btn" onclick="startMode('sequential')">
+                    📋 模式一：順序練習<br>
+                    <small>Sequential Order</small>
+                </button>
+                <button class="mode-btn" onclick="startMode('random')">
+                    🔀 模式二：隨機練習<br>
+                    <small>Random Order</small>
+                </button>
+                <button class="mode-btn" onclick="startMode('review')">
+                    ✅ 模式三：全部複習<br>
+                    <small>Review All</small>
+                </button>
+                <button class="mode-btn" onclick="startMode('bookmarks')">
+                    🔖 模式四：我的書籤<br>
+                    <small>My Bookmarks</small>
+                </button>
+            </div>
+
+            <button class="settings-btn" onclick="toggleSettings()">⚙️ 設定 | Settings</button>
+        </div>
+
+            <div class="topic-card">
+                <button class="bookmark-btn" id="bookmarkBtn" onclick="toggleBookmark()">☆</button>
+                <div class="section-title" id="sectionTitle"></div>
+                <div class="topic-title" id="topicTitle"></div>
+                <div class="verse-reference" id="verseReference"></div>
+                <div class="verse-content" id="verseContent"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="revealBtn" onclick="revealVerse()">顯示經文 (Reveal)</button>
+                <button class="btn btn-success hidden" id="nextBtn" onclick="nextVerse()">下一節 (Next)</button>
+                <button class="btn btn-secondary" onclick="backToMenu()">返回選單 (Back to Menu)</button>
+            </div>
+
+            <div class="completion-message hidden" id="completionMessage">
+                <h2>🎉 恭喜完成！Congratulations!</h2>
+                <p>你已完成所有經文的練習！<br>You have completed all verses!</p>
+                <button class="btn btn-primary" onclick="backToMenu()">返回選單 (Back to Menu)</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        const STORAGE_KEY = 'tms60_progress_v3';
-        const BOOKMARK_KEY = 'tms60_bookmarks_v3';
+        // PWA Install functionality
+        let deferredPrompt;
 
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBanner').classList.add('show');
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    }
+                    deferredPrompt = null;
+                    document.getElementById('installBanner').classList.remove('show');
+                });
+            }
+        }
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw_tms60_v3.js')
+                .then(reg => console.log('Service Worker registered', reg))
+                .catch(err => console.log('Service Worker registration failed', err));
+        }
+
+        // Offline Detection
+        window.addEventListener('online', () => {
+            document.getElementById('offlineIndicator').classList.remove('show');
+        });
+
+        window.addEventListener('offline', () => {
+            document.getElementById('offlineIndicator').classList.add('show');
+        });
+
+        // Bible Verses Data
         const verses = [
             // A. 過新生活 (Living the New Life)
             { section: "A. 過新生活 (Living the New Life)", topic: "基督是中心", ref: "林後 5:17", text: "若有人在基督裡，他就是新造的人。舊事已過，都變成新的了。 (林後 5:17)" },
@@ -581,122 +636,234 @@
             { section: "E. 長成基督的讓式 (Growing in Christlikeness)", topic: "信心", ref: "羅 4:20-21", text: "並且仰望神的應許，總沒有因不信，心裡起疑惑。反倒因信，心裡得堅固，將榮耀歸給神。且滿心相信，神所應許的必能作成。(羅 4:20-21)" },
             { section: "E. 長成基督的讓式 (Growing in Christlikeness)", topic: "善行", ref: "加 6:9-10", text: "我們行善，不可喪志。若不灰心，到了時候，就要收成。 所以有了機會，就當向眾人行善。向信徒一家的人更當這樣。(加 6:9-10)" },
             { section: "E. 長成基督的讓式 (Growing in Christlikeness)", topic: "善行", ref: "太 5:16", text: "你們的光也當這樣照在人前，叫他們看見你們的好行為，便將榮耀歸給你們在天上的父。(太 5:16)" }
-        
         ];
 
-        let currentMode = 0;
-        let currentIndex = 0;
-        let practiceVerses = [];
-        let bookmarks = [];
-        let isRevealed = false;
-
-        // Load saved data
-        function loadSavedData() {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            const savedBookmarks = localStorage.getItem(BOOKMARK_KEY);
-
-            if (savedBookmarks) {
-                bookmarks = JSON.parse(savedBookmarks);
-            }
-
-            updateStats();
-
-            if (saved) {
-                const data = JSON.parse(saved);
-                if (data.index > 0 && data.index < verses.length) {
-                    document.getElementById('resumeBanner').classList.add('show');
-                    document.getElementById('resumeBanner').onclick = () => resumeSession(data);
-                }
-            }
-        }
-
-        function resumeSession(data) {
-            startMode(data.mode);
-            currentIndex = data.index;
-            showVerse();
-        }
-
-        function updateStats() {
-            document.getElementById('totalPracticed').textContent = localStorage.getItem('totalPracticed_tms60') || '0';
-            document.getElementById('bookmarkCount').textContent = bookmarks.length;
-            document.getElementById('lastPractice').textContent = localStorage.getItem('lastPractice_tms60') || '未練習';
-        }
+        // Local Storage Management
+        const STORAGE_KEY = 'tms60_progress';
 
         function saveProgress() {
             const data = {
                 mode: currentMode,
                 index: currentIndex,
+                bookmarks: bookmarks,
+                stats: {
+                    totalPracticed: parseInt(localStorage.getItem('totalPracticed') || '0'),
+                    lastPractice: new Date().toLocaleDateString()
+                },
                 timestamp: new Date().toISOString()
             };
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-            localStorage.setItem(BOOKMARK_KEY, JSON.stringify(bookmarks));
-
-            const practiced = parseInt(localStorage.getItem('totalPracticed_tms60') || '0');
-            localStorage.setItem('totalPracticed_tms60', practiced.toString());
-            localStorage.setItem('lastPractice_tms60', new Date().toLocaleDateString());
-
             updateStats();
         }
 
-        function startMode(mode) {
-            currentMode = mode;
-            currentIndex = 0;
-            isRevealed = false;
-
-            document.getElementById('modeSelection').classList.add('hidden');
-            document.getElementById('practiceArea').classList.remove('hidden');
-
-            if (mode === 1) {
-                practiceVerses = verses.slice();
-            } else if (mode === 2) {
-                practiceVerses = verses.slice().sort(() => Math.random() - 0.5);
-            } else if (mode === 3) {
-                practiceVerses = verses.slice();
-            } else if (mode === 4) {
-                practiceVerses = verses.filter((_, idx) => bookmarks.includes(idx));
-                if (practiceVerses.length === 0) {
-                    alert('沒有書籤！請先在其他模式中標記一些經文。\n\nNo bookmarks! Please bookmark some verses in other modes first.');
-                    backToMenu();
-                    return;
+        function loadProgress() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    // Show resume banner if there's saved progress
+                    if (data.index > 0 && data.index < verses.length) {
+                        document.getElementById('resumeBanner').classList.add('show');
+                    }
+                    return data;
+                } catch (e) {
+                    console.error('Error loading progress:', e);
                 }
             }
-
-            showVerse();
+            return null;
         }
 
-        function showVerse() {
-            if (currentIndex >= practiceVerses.length) {
-                showCompletion();
+        function resumeProgress() {
+            const saved = loadProgress();
+            if (saved) {
+                currentMode = saved.mode;
+                currentIndex = saved.index;
+                bookmarks = saved.bookmarks || [];
+
+                // Reconstruct the verse order based on saved mode
+                if (saved.mode === 'random') {
+                    // Generate same random order (using timestamp as seed)
+                    currentVerses = [...verses].sort(() => Math.random() - 0.5);
+                } else if (saved.mode === 'bookmarks') {
+                    currentVerses = verses.filter((v, i) => bookmarks.includes(i));
+                } else {
+                    currentVerses = [...verses];
+                }
+
+                document.getElementById('modeSelection').style.display = 'none';
+                document.getElementById('practiceArea').style.display = 'block';
+                document.getElementById('resumeBanner').classList.remove('show');
+
+                showVerse();
+            }
+        }
+
+        function clearProgress() {
+            if (confirm('確定要清除所有進度？This will delete all your progress!')) {
+                localStorage.clear();
+                bookmarks = [];
+                alert('所有進度已清除！All progress cleared!');
+                location.reload();
+            }
+        }
+
+        function updateStats() {
+            const total = parseInt(localStorage.getItem('totalPracticed') || '0');
+            const lastDate = localStorage.getItem('lastPractice') || 'Never';
+            document.getElementById('totalPracticed').textContent = total;
+            document.getElementById('bookmarkCount').textContent = bookmarks.length;
+            document.getElementById('lastPractice').textContent = lastDate;
+        }
+
+        function incrementTotal() {
+            const current = parseInt(localStorage.getItem('totalPracticed') || '0');
+            localStorage.setItem('totalPracticed', (current + 1).toString());
+            localStorage.setItem('lastPractice', new Date().toLocaleDateString());
+            updateStats();
+        }
+
+        function exportData() {
+            const data = {
+                progress: localStorage.getItem(STORAGE_KEY),
+                bookmarks: bookmarks,
+                totalPracticed: localStorage.getItem('totalPracticed'),
+                lastPractice: localStorage.getItem('lastPractice'),
+                exportDate: new Date().toISOString()
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '14basic_backup_' + new Date().toISOString().split('T')[0] + '.json';
+            a.click();
+            alert('Data exported! 數據已導出！');
+        }
+
+        function showStats() {
+            const total = localStorage.getItem('totalPracticed') || '0';
+            const lastDate = localStorage.getItem('lastPractice') || 'Never';
+            const bookmarkCount = bookmarks.length;
+            alert(`📊 Statistics:\n\nTotal verses practiced: ${total}\nBookmarked verses: ${bookmarkCount}\nLast practice: ${lastDate}`);
+        }
+
+        // Bookmark Management
+        let bookmarks = [];
+        let isRevealed = false;
+
+        function loadBookmarks() {
+            const saved = localStorage.getItem('tms60_bookmarks');
+            if (saved) {
+                try {
+                    bookmarks = JSON.parse(saved);
+                } catch (e) {
+                    bookmarks = [];
+                }
+            }
+        }
+
+        function saveBookmarks() {
+            localStorage.setItem('tms60_bookmarks', JSON.stringify(bookmarks));
+            updateStats();
+        }
+
+        function toggleBookmark() {
+            const globalIndex = verses.findIndex(v =>
+                v.ref === currentVerses[currentIndex].ref
+            );
+
+            const bookmarkIndex = bookmarks.indexOf(globalIndex);
+            if (bookmarkIndex > -1) {
+                bookmarks.splice(bookmarkIndex, 1);
+                document.getElementById('bookmarkBtn').textContent = '☆';
+            } else {
+                bookmarks.push(globalIndex);
+                document.getElementById('bookmarkBtn').textContent = '★';
+            }
+            saveBookmarks();
+        }
+
+        function updateBookmarkButton() {
+            const globalIndex = verses.findIndex(v =>
+                v.ref === currentVerses[currentIndex].ref
+            );
+            document.getElementById('bookmarkBtn').textContent =
+                bookmarks.includes(globalIndex) ? '★' : '☆';
+        }
+
+        // Main App Logic
+        let currentMode = '';
+        let currentVerses = [];
+        let currentIndex = 0;
+
+        function startMode(mode) {
+            if (mode === 'bookmarks' && bookmarks.length === 0) {
+                alert('還沒有書籤！No bookmarks yet! Star some verses first.');
                 return;
             }
 
-            const verse = practiceVerses[currentIndex];
-            const verseIdx = verses.indexOf(verse);
+            currentMode = mode;
+            currentIndex = 0;
 
-            document.getElementById('sectionTitle').textContent = verse.section || '';
-            document.getElementById('topicTitle').textContent = verse.topic;
-            document.getElementById('verseReference').textContent = verse.ref;
-            document.getElementById('verseContent').textContent = verse.text;
-            document.getElementById('verseContent').classList.remove('show');
+            if (mode === 'sequential') {
+                currentVerses = [...verses];
+            } else if (mode === 'random') {
+                currentVerses = [...verses].sort(() => Math.random() - 0.5);
+            } else if (mode === 'review') {
+                currentVerses = [...verses];
+            } else if (mode === 'bookmarks') {
+                currentVerses = verses.filter((v, i) => bookmarks.includes(i));
+            }
 
-            document.getElementById('bookmarkBtn').textContent = bookmarks.includes(verseIdx) ? '★' : '☆';
+            document.getElementById('modeSelection').style.display = 'none';
+            document.getElementById('practiceArea').style.display = 'block';
+            document.getElementById('completionMessage').classList.add('hidden');
 
-            document.getElementById('progressText').textContent = `${currentIndex + 1}/${practiceVerses.length}`;
-            const percent = ((currentIndex + 1) / practiceVerses.length) * 100;
-            document.getElementById('progressFill').style.width = percent + '%';
+            showVerse();
 
-            // Reset toggle button
+            // v3: Reset toggle button
             isRevealed = false;
             document.getElementById('toggleBtn').textContent = 'Reveal 顯示';
             document.getElementById('toggleBtn').classList.remove('hide-mode');
 
-            // Update navigation buttons
+            // v3: Update navigation buttons
             document.getElementById('prevBtn').disabled = currentIndex === 0;
             document.getElementById('nextBtn').disabled = currentIndex >= practiceVerses.length - 1;
 
             saveProgress();
         }
 
+        function showVerse() {
+            if (currentIndex >= currentVerses.length) {
+                showCompletion();
+                return;
+            }
+
+            const verse = currentVerses[currentIndex];
+            document.getElementById('sectionTitle').textContent = verse.section || '';
+            document.getElementById('topicTitle').textContent = verse.topic;
+            document.getElementById('verseReference').textContent = verse.ref;
+            document.getElementById('verseContent').textContent = verse.text;
+            document.getElementById('verseContent').classList.remove('show');
+
+            document.getElementById('revealBtn').classList.remove('hidden');
+            document.getElementById('nextBtn').classList.add('hidden');
+
+            updateBookmarkButton();
+            updateProgress();
+
+            // v3: Reset toggle button
+            isRevealed = false;
+            document.getElementById('toggleBtn').textContent = 'Reveal 顯示';
+            document.getElementById('toggleBtn').classList.remove('hide-mode');
+
+            // v3: Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
+            document.getElementById('nextBtn').disabled = currentIndex >= practiceVerses.length - 1;
+
+            saveProgress();
+        }
+
+        
         function toggleVerse() {
             const verseContent = document.getElementById('verseContent');
             const toggleBtn = document.getElementById('toggleBtn');
@@ -729,171 +896,46 @@
             }
         }
 
+
         function nextVerse() {
-            if (currentIndex < practiceVerses.length - 1) {
-                currentIndex++;
-                showVerse();
-            }
+            currentIndex++;
+            showVerse();
         }
 
-        function toggleBookmark() {
-            const verse = practiceVerses[currentIndex];
-            const verseIdx = verses.indexOf(verse);
-
-            if (bookmarks.includes(verseIdx)) {
-                bookmarks = bookmarks.filter(b => b !== verseIdx);
-                document.getElementById('bookmarkBtn').textContent = '☆';
-            } else {
-                bookmarks.push(verseIdx);
-                document.getElementById('bookmarkBtn').textContent = '★';
-            }
-
-            localStorage.setItem(BOOKMARK_KEY, JSON.stringify(bookmarks));
-            updateStats();
+        function updateProgress() {
+            const total = currentVerses.length;
+            const current = currentIndex + 1;
+            document.getElementById('progressText').textContent = `Progress: ${current} / ${total}`;
+            const percentage = (current / total) * 100;
+            document.getElementById('progressFill').style.width = percentage + '%';
         }
 
         function showCompletion() {
-            document.getElementById('practiceArea').innerHTML = `
-                <div class="completion-message">
-                    <h2>🎉 完成！ Completed!</h2>
-                    <p>你已經完成所有經文的練習！</p>
-                    <p>You have completed all verses!</p>
-                    <div class="action-buttons">
-                        <button class="btn btn-success" onclick="startMode(currentMode)">🔄 重新開始 | Restart</button>
-                        <button class="btn btn-secondary" onclick="backToMenu()">⬅ 回選單 | Back to Menu</button>
-                    </div>
-                </div>
-            `;
+            document.querySelector('.topic-card').style.display = 'none';
+            document.querySelector('.action-buttons').style.display = 'none';
+            document.getElementById('completionMessage').classList.remove('hidden');
+
+            // Clear saved progress when completed
+            localStorage.removeItem(STORAGE_KEY);
         }
 
         function backToMenu() {
-            document.getElementById('modeSelection').classList.remove('hidden');
-            document.getElementById('practiceArea').classList.add('hidden');
-            document.getElementById('practiceArea').innerHTML = `
-                <div class="progress">
-                    <div>進度 Progress: <span id="progressText">0/0</span></div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
-                    </div>
-                </div>
+            document.getElementById('modeSelection').style.display = 'block';
+            document.getElementById('practiceArea').style.display = 'none';
+            document.querySelector('.topic-card').style.display = 'block';
+            document.querySelector('.action-buttons').style.display = 'flex';
 
-                <div class="topic-card" id="verseCard">
-                    <button class="bookmark-btn" id="bookmarkBtn" onclick="toggleBookmark()">☆</button>
-                    <div class="section-title" id="sectionTitle" style="font-size: 1.2em; color: #999; margin-bottom: 10px; text-align: center;"></div>
-                    <div class="topic-title" id="topicTitle"></div>
-                    <div class="verse-reference" id="verseReference"></div>
-                    <div class="verse-content" id="verseContent"></div>
-                </div>
-
-                <div class="navigation-controls">
-                    <button class="nav-btn" id="prevBtn" onclick="previousVerse()">←</button>
-                    <button class="toggle-btn" id="toggleBtn" onclick="toggleVerse()">Reveal 顯示</button>
-                    <button class="nav-btn" id="nextBtn" onclick="nextVerse()">→</button>
-                </div>
-
-                <div class="action-buttons">
-                    <button class="btn btn-secondary" onclick="backToMenu()">⬅ Back to Menu 回選單</button>
-                </div>
-            `;
-
+            // Clear saved progress when going back to menu
             localStorage.removeItem(STORAGE_KEY);
             document.getElementById('resumeBanner').classList.remove('show');
         }
 
-        function toggleSettings() {
-            const modal = document.getElementById('settingsModal');
-            if (modal.classList.contains('show')) {
-                modal.classList.remove('show');
-            } else {
-                modal.classList.add('show');
-            }
-        }
-
-        function viewStats() {
-            const practiced = localStorage.getItem('totalPracticed_tms60') || '0';
-            const lastDate = localStorage.getItem('lastPractice_tms60') || '未練習';
-            const bookmarkCount = bookmarks.length;
-
-            alert(`📊 統計資料 | Statistics\n\n` +
-                  `✅ 總練習次數 | Total Practiced: ${practiced} 次\n` +
-                  `🔖 書籤數量 | Bookmarks: ${bookmarkCount}\n` +
-                  `📅 最後練習 | Last Practice: ${lastDate}`);
-        }
-
-        function exportData() {
-            const data = {
-                totalPracticed: localStorage.getItem('totalPracticed_tms60') || '0',
-                lastPractice: localStorage.getItem('lastPractice_tms60') || 'Never',
-                bookmarks: bookmarks,
-                exportDate: new Date().toISOString()
-            };
-
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `tms60_backup_${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-
-            alert('資料已匯出！Data exported!');
-        }
-
-        function resetProgress() {
-            if (confirm('確定要重置所有進度和書籤嗎？此操作無法復原。\n\nAre you sure you want to reset all progress and bookmarks? This cannot be undone.')) {
-                localStorage.removeItem(STORAGE_KEY);
-                localStorage.removeItem(BOOKMARK_KEY);
-                localStorage.removeItem('totalPracticed_tms60');
-                localStorage.removeItem('lastPractice_tms60');
-                bookmarks = [];
-                updateStats();
-                alert('已重置所有資料！All data has been reset!');
-                toggleSettings();
-            }
-        }
-
-        // PWA Install
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('installBanner').classList.add('show');
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            loadBookmarks();
+            loadProgress();
+            updateStats();
         });
-
-        document.getElementById('installBanner').addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                document.getElementById('installBanner').classList.remove('show');
-            }
-        });
-
-        // Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw_tms60_v3.js')
-                .then(reg => console.log('Service Worker registered', reg))
-                .catch(err => console.log('Service Worker registration failed', err));
-        }
-
-        // Offline Detection
-        window.addEventListener('online', () => {
-            document.getElementById('offlineIndicator').classList.remove('show');
-        });
-
-        window.addEventListener('offline', () => {
-            document.getElementById('offlineIndicator').classList.add('show');
-        });
-
-        // Close modal when clicking outside
-        window.addEventListener('click', (e) => {
-            const modal = document.getElementById('settingsModal');
-            if (e.target === modal) {
-                toggleSettings();
-            }
-        });
-
-        // Initialize
-        loadSavedData();
     </script>
 </body>
 </html>
